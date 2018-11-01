@@ -1335,4 +1335,239 @@ public class Solution {
 			    }
 			}
 			     */
+			    
+//39.二叉树的深度 递归方法
+			    //输入一棵二叉树，求该树的深度。从根结点到叶结点依次经过的结点（含根、叶结点）形成树的一条路径，最长路径的长度为树的深度。
+			    public int TreeDepth(TreeNode root) {
+			        if(root==null) return 0;
+			        int left = TreeDepth(root.left);
+			        int right = TreeDepth(root.right);
+			        return (left>right)?(left+1):(right+1);
+			    }
+			    /*非递归解法 层序遍历
+			     * 链接：https://www.nowcoder.com/questionTerminal/435fb86331474282a3499955f0a41e8b
+来源：牛客网
+
+ public int TreeDepth(TreeNode pRoot)
+    {
+        if(pRoot == null){
+            return 0;
+        }
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(pRoot);
+        int depth = 0, count = 0, nextCount = 1;
+        while(queue.size()!=0){
+            TreeNode top = queue.poll();
+            count++;
+            if(top.left != null){
+                queue.add(top.left);
+            }
+            if(top.right != null){
+                queue.add(top.right);
+            }
+            if(count == nextCount){
+                nextCount = queue.size();
+                count = 0;
+                depth++;
+            }
+        }
+        return depth;
+    }
+			     */
+//40.判断一棵树是不是平二叉树 性质：它是一 棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。
+			    /*public boolean IsBalanced_Solution(TreeNode root) {//结点被重复遍历，不够高效；
+			        if(root==null) return true;
+			        int left = TreeDepth(root.left);
+			        int right = TreeDepth(root.right);
+			        int diff = left - right;
+			        if(Math.abs(diff)>1) return false;
+			        return  IsBalanced_Solution(root.right) && IsBalanced_Solution(root.left);
+			    }
+			    public int TreeDepth(TreeNode root) {
+			        if(root==null) return 0;
+			        int left = TreeDepth(root.left);
+			        int right = TreeDepth(root.right);
+			        return (left>right)?(left+1):(right+1);
+			    }*/
+			    
+			   // 链接：https://www.nowcoder.com/questionTerminal/8b3b95850edb4115918ecebdf1b4d222
+			    	//来源：牛客网
+
+			    	//后续遍历时，遍历到一个节点，其左右子树已经遍历  依次自底向上判断，每个节点只需要遍历一次
+			    	     
+			    	    private boolean isBalanced=true;
+			    	    public boolean IsBalanced_Solution(TreeNode root) {
+			    	         
+			    	        getDepth(root);
+			    	        return isBalanced;
+			    	    }
+			    	    public int getDepth(TreeNode root){
+			    	        if(root==null)
+			    	            return 0;
+			    	        int left=getDepth(root.left);
+			    	        int right=getDepth(root.right);
+			    	         
+			    	        if(Math.abs(left-right)>1){
+			    	            isBalanced=false;//未剪枝 把结点全部遍历一遍
+			    	        }
+			    	        return right>left ?right+1:left+1;
+			    	         
+			    	    }
+			    	    //剪枝了
+			    	    /*链接：https://www.nowcoder.com/questionTerminal/8b3b95850edb4115918ecebdf1b4d222
+			    	    	来源：牛客网
+
+			    	    	public boolean IsBalanced_Solution(TreeNode root) {
+			    	    	        return getDepth(root) != -1;
+			    	    	    }
+			    	    	     
+			    	    	    private int getDepth(TreeNode root) {
+			    	    	        if (root == null) return 0;
+			    	    	        int left = getDepth(root.left);
+			    	    	        if (left == -1) return -1;
+			    	    	        int right = getDepth(root.right);
+			    	    	        if (right == -1) return -1;
+			    	    	        return Math.abs(left - right) > 1 ? -1 : 1 + Math.max(left, right);
+			    	    	    }*/
+			    	    //用异常达到剪枝效果
+			    	    /*
+			    	     * 链接：https://www.nowcoder.com/questionTerminal/8b3b95850edb4115918ecebdf1b4d222?toCommentId=509797
+							来源：牛客网
+
+					class Solution {
+					public:
+					    bool IsBalanced_Solution(TreeNode* pRoot) {
+					        try{
+					            height(pRoot);
+					            return true;
+					        }catch(string * e){
+					            return false;
+					        }
+					    }
+					     
+					    int height(TreeNode * root){
+					        if(!root)return 0;
+					        int left = 1 + height(root->left);
+					        int right = 1 + height(root->right);
+					        if(abs(left - right)>1)throw new string();
+					        return max(left,right);
+					    }
+					};
+								    	     */
+//39. 数组中只出现一次的数字 一个整型数组里除了两个数字之外，其他的数字都出现了偶数次。请写程序找出这两个只出现一次的数字。
+			    	    /*
+								    	     * 链接：https://www.nowcoder.com/questionTerminal/e02fdb54d7524710a7d664d082bb7811
+					来源：牛客网
+					
+					
+					 首先我们考虑这个问题的一个简单版本：一个数组里除了一个数字之外，其他的数字都出现了两次。请写程序找出这个只出现一次的数字。
+					 这个题目的突破口在哪里？题目为什么要强调有一个数字出现一次，其他的出现两次？我们想到了异或运算的性质：任何一个数字异或它自己都等于0 。也就是说，如果我们从头到尾依次异或数组中的每一个数字，那么最终的结果刚好是那个只出现一次的数字，因为那些出现两次的数字全部在异或中抵消掉了。
+					 有了上面简单问题的解决方案之后，我们回到原始的问题。如果能够把原数组分为两个子数组。在每个子数组中，包含一个只出现一次的数字，而其它数字都出现两次。如果能够这样拆分原数组，按照前面的办法就是分别求出这两个只出现一次的数字了。
+					 我们还是从头到尾依次异或数组中的每一个数字，那么最终得到的结果就是两个只出现一次的数字的异或结果。因为其它数字都出现了两次，在异或中全部抵消掉了。由于这两个数字肯定不一样，那么这个异或结果肯定不为0 ，也就是说在这个结果数字的二进制表示中至少就有一位为1 。我们在结果数字中找到第一个为1 的位的位置，记为第N 位。现在我们以第N 位是不是1 为标准把原数组中的数字分成两个子数组，第一个子数组中每个数字的第N 位都为1 ，而第二个子数组的每个数字的第N 位都为0 。
+					 现在我们已经把原数组分成了两个子数组，每个子数组都包含一个只出现一次的数字，而其它数字都出现了两次。因此到此为止，所有的问题我们都已经解决。
+			    	     * 
+			    	     */
+			    	    public void FindNumsAppearOnce(int [] array,int num1[] , int num2[]) {
+			    	        int num = array[0];
+			    	        for(int i=1;i<array.length;i++){
+			    	            num = num ^ array[i];//异或找出两个不同数字的异或
+			    	        }
+			    	        //找出num的最低位为1的数；
+			    	        int point = num^(num-1)&num;
+			    	        for(int i=0;i<array.length;i++){
+			    	            if((array[i]&point)==0){
+			    	                if(num1==null) //这里不要写成 num1[0]==null
+			    	                    num1[0]=array[i];
+			    	                else
+			    	                    num1[0]^=array[i];
+			    	            }
+			    	            else{
+			    	                if(num2==null) 
+			    	                    num2[0]=array[i];
+			    	                else
+			    	                    num2[0]^=array[i];
+			    	            }
+			    	                
+			    	        }
+			    	        
+			    	        }
+	//40.和为S的连续正数序列  输出所有和为S的连续正数序列。序列内按照从小至大的顺序，序列间按照开始数字从小到大的顺序
+			    	   
+
+			    	    	public ArrayList<ArrayList<Integer> > FindContinuousSequence(int sum) {
+			    	    	        //存放结果
+			    	    	        ArrayList<ArrayList<Integer> > result = new ArrayList<>();
+			    	    	        //两个起点，相当于动态窗口的两边，根据其窗口内的值的和来确定窗口的位置和大小
+			    	    	        int plow = 1,phigh = 2;
+			    	    	        while(phigh > plow){
+			    	    	            //由于是连续的，差为1的一个序列，那么求和公式是(a0+an)*n/2
+			    	    	            int cur = (phigh + plow) * (phigh - plow + 1) / 2;
+			    	    	            //相等，那么就将窗口范围的所有数添加进结果集
+			    	    	            if(cur == sum){
+			    	    	                ArrayList<Integer> list = new ArrayList<>();
+			    	    	                for(int i=plow;i<=phigh;i++){
+			    	    	                    list.add(i);
+			    	    	                }
+			    	    	                result.add(list);
+			    	    	                plow++;
+			    	    	            //如果当前窗口内的值之和小于sum，那么右边窗口右移一下
+			    	    	            }else if(cur < sum){
+			    	    	                phigh++;
+			    	    	            }else{
+			    	    	            //如果当前窗口内的值之和大于sum，那么左边窗口右移一下
+			    	    	                plow++;
+			    	    	            }
+			    	    	        }
+			    	    	        return result;
+			    	    	    }
+		//41 和为S的两个数字  输入一个递增排序的数组和一个数字S，在数组中查找两个数，使得他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。
+			    	    	public ArrayList<Integer> FindNumbersWithSum(int [] array,int sum) {
+			    	            ArrayList<Integer> list = new ArrayList<>();
+			    	            if(array==null || array.length<2) return list; //不存在则返回空集合
+			    	            int point=0;
+			    	             
+			    	            for(int i=0;i<array.length;i++){
+			    	                if(array[i]>=sum/2){
+			    	                    point = i;
+			    	                    break;
+			    	                }
+			    	            }
+			    	            for(int i=0;i<point;i++){
+			    	                for(int j=array.length-1;j>=point;j--){
+			    	                    if((array[i]+array[j]) == sum){
+			    	                        list.add(array[i]);
+			    	                        list.add(array[j]);
+			    	                        return list;
+			    	                    }
+			    	                }
+			    	            }
+			    	            return list;
+			    	        }
+			    	    	/*
+			    	    	 * 链接：https://www.nowcoder.com/questionTerminal/390da4f7a00f44bea7c2f3d19491311b
+来源：牛客网
+既然是排序好的，就好办了：左右加逼
+
+public ArrayList<Integer> FindNumbersWithSum(int [] array,int sum) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        if (array == null || array.length < 2) {
+            return list;
+        }
+        int i=0,j=array.length-1;
+        while(i<j){
+            if(array[i]+array[j]==sum){
+            list.add(array[i]);
+            list.add(array[j]);
+                return list;
+           }else if(array[i]+array[j]>sum){
+                j--;
+            }else{
+                i++;
+            }
+             
+        }
+        return list;
+    }
+			    	    	 */
+					
 }
